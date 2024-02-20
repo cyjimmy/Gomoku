@@ -4,23 +4,21 @@ import numpy as np
 import pygame
 from tensorflow.keras.models import load_model
 
-my_model = True
-if my_model:
-    model = load_model("./models/my_model_sigmoid_binary_5000_up30_2moves.h5")
-else:
-    model = load_model("./models/20201213_202430.h5")
-sound_dir = os.path.join(os.path.dirname(__file__), "sound")
+model_path = os.path.join(os.path.dirname(__file__), "model", "my_model.h5")
+model = load_model(model_path)
+# sound_dir = os.path.join(os.path.dirname(__file__), "sound")
 
 
-def announce(message):
-    file_path = os.path.join(sound_dir, message + ".mp3")
-    pygame.mixer.init()
-    pygame.mixer.music.load(file_path)
-    pygame.mixer.music.play()
-    while pygame.mixer.music.get_busy():
-        pygame.time.Clock().tick(10)
-    pygame.mixer.quit()
-    
+# def announce(message):
+#     file_path = os.path.join(sound_dir, message + ".mp3")
+#     pygame.mixer.init()
+#     pygame.mixer.music.load(file_path)
+#     pygame.mixer.music.play()
+#     while pygame.mixer.music.get_busy():
+#         pygame.time.Clock().tick(10)
+#     pygame.mixer.quit()
+
+
 def on_click(event):
     # Do nothing if the game is over
     if game_over:
@@ -48,30 +46,24 @@ def on_click(event):
 
     # Check if the game is over
     check_game_over(player=1)
-    
+
     # Check if board is full
     if check_board_full():
         return
 
     # Make a prediction with the trained model
-    if my_model:
-        input = -board
-        output = model.predict(np.array([input]))
-        while True:
-            predicted_index = np.argmax(output)
-            row = predicted_index // 20
-            col = predicted_index % 20
-            if board[row][col] == 0:
-                break
-            output[0][predicted_index] = 0
-    else:
-        input = np.expand_dims(board, axis=(0, -1)).astype(np.float32)
-        output = model.predict(input).squeeze()
-        output = output.reshape((20, 20))
-        row, col = np.unravel_index(np.argmax(output), output.shape)
+    input = -board
+    output = model.predict(np.array([input]))
+    while True:
+        predicted_index = np.argmax(output)
+        row = predicted_index // 20
+        col = predicted_index % 20
+        if board[row][col] == 0:
+            break
+        output[0][predicted_index] = 0
 
-    announce(chr(ord('a') + row))
-    announce(str(col + 1))
+    # announce(chr(ord("a") + row))
+    # announce(str(col + 1))
 
     # Draw the predicted piece
     canvas.create_oval(
@@ -87,10 +79,11 @@ def on_click(event):
 
     # Check if the game is over
     check_game_over(player=-1)
-    
+
     # Check if board is full
     if check_board_full():
         return
+
 
 def check_board_full():
     global game_over
@@ -168,10 +161,10 @@ def check_game_over(player):
             break
     if won_player != 0:
         winner_message = "Black won!" if won_player == 1 else "White won!"
-        if won_player == 1:
-            announce("blackWin")
-        else:
-            announce("whiteWin")
+        # if won_player == 1:
+        #     announce("blackWin")
+        # else:
+        #     announce("whiteWin")
         canvas.create_text(
             canvas_width / 2,
             board_bottom + y_offset / 2,
@@ -221,14 +214,13 @@ for i in range(board_size):
     canvas.create_text(
         board_left - 20,
         board_top + i * cell_size,
-        text=chr(65 + i), 
-         # Adding 1 to make it 1-based index
+        text=chr(65 + i),
+        # Adding 1 to make it 1-based index
     )
     canvas.create_text(
         board_left + i * cell_size - 10,
         board_top - 10,
-        
-         text=str(i + 1),  # Using ASCII values to get alphabet index
+        text=str(i + 1),  # Using ASCII values to get alphabet index
     )
 
     canvas.create_line(
