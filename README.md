@@ -10,10 +10,12 @@ https://gomocup.org/results/gomocup-result-2022/
 
 ## Run gui app
 1. Install required dependencis.
+
     ```
     pip install -r requirements.txt
     ```
 2. Run `gui.py`
+
     ```
     python gui.py
     ```
@@ -21,14 +23,17 @@ https://gomocup.org/results/gomocup-result-2022/
 ## Train model (optional)
 A trained model, `my_model.h5`, is included in the repo. The model is trained with 5000 games in `/dataset/raw`. If you want to train with more games to improve performance, you can follow steps below.
 1. Install required dependencis.
+
     ```
     pip install -r requirements.txt
     ```
 2. Run `create_dataset.py`. This will process the raw game files and compile them into a dataset file required to train the model. The output file will be stored in `/dataset/processed`.
+
     ```
     python create_dataset.py
     ```
 3. Run `train_model.py`. This will train a CNN using the dataset created in previous step. The model will be stored in `/model`.
+
     ```
     python train_model.py
     ```
