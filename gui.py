@@ -1,7 +1,7 @@
 import os
 import tkinter as tk
 import numpy as np
-import pygame
+# import pygame
 from tensorflow.keras.models import load_model
 
 model_path = os.path.join(os.path.dirname(__file__), "model", "my_model.h5")
