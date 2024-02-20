@@ -1,7 +1,6 @@
 import os
 import re
 import numpy as np
-import pandas as pd
 
 
 raw_data_dir_path = os.path.join(os.path.dirname(__file__), "dataset", "raw")
